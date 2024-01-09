@@ -1,0 +1,61 @@
+class DSIPContract:
+    def __init__(self):
+        self.node_registry = {}
+        self.token_balances = {}
+
+    def register_node(self, node_id):
+        # Register a new node in the network
+        self.node_registry[node_id] = {
+            'active': True,
+            'uptime': 0,
+            'data_stored': 0
+        }
+        self.token_balances[node_id] = 0
+
+    def report_activity(self, node_id, uptime, data_stored):
+        # Nodes periodically report their activity
+        self.node_registry[node_id]['uptime'] = uptime
+        self.node_registry[node_id]['data_stored'] = data_stored
+
+    def reward_tokens(self, node_id):
+        # Calculate tokens to reward based on positive behavior
+        reward_coefficient = 0.1  # Placeholder value, adjust as needed
+        tokens_to_reward = (
+            self.node_registry[node_id]['uptime'] +
+            self.node_registry[node_id]['data_stored']
+        ) * reward_coefficient
+
+        self.token_balances[node_id] += tokens_to_reward
+
+    def penalize_tokens(self, node_id):
+        # Calculate tokens to penalize based on negative behavior
+        penalty_coefficient = 0.05  # Placeholder value, adjust as needed
+        tokens_to_penalty = (
+            self.node_registry[node_id]['uptime'] +
+            self.node_registry[node_id]['data_stored']
+        ) * penalty_coefficient
+
+        self.token_balances[node_id] -= tokens_to_penalty
+
+    def get_token_balance(self, node_id):
+        # Get the current token balance of a node
+        return self.token_balances[node_id]
+
+# Example Usage:
+dsip_contract = DSIPContract()
+
+# Register nodes
+dsip_contract.register_node("Node1")
+dsip_contract.register_node("Node2")
+
+# Simulate node activity reporting
+dsip_contract.report_activity("Node1", uptime=90, data_stored=100)
+dsip_contract.report_activity("Node2", uptime=80, data_stored=120)
+
+# Simulate token rewards and penalties
+dsip_contract.reward_tokens("Node1")
+dsip_contract.penalize_tokens("Node2")
+
+# Check token balances
+print("Node1 Balance:", dsip_contract.get_token_balance("Node1"))  # Output: Node1 Balance: 19.0 (Placeholder value)
+print("Node2 Balance:", dsip_contract.get_token_balance("Node2"))  # Output: Node2 Balance: -6.0 (Placeholder value)
